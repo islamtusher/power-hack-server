@@ -41,6 +41,13 @@ async function run() {
             const result = await billsCollection.insertOne(data)
             res.send(result)
         })
+        
+        // DElete a new bill informations
+        app.delete('/deleteBill/:id', async (req, res) => {
+            const query = {_id : ObjectId(req.params.id)}
+            const result = await billsCollection.deleteOne(query)
+            res.send(result)
+        })
 
          
     }
