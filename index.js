@@ -49,6 +49,17 @@ async function run() {
             res.send(result)
         })
 
+        // update the odlder one
+        app.patch('/updateBill/:id', async (req, res) => {
+            console.log(req.params);
+            const filter = {_id : ObjectId(req.params.id)};
+            const updateDoc = {
+                $set: req.body
+            };
+            const result = await billsCollection.updateOne(filter, updateDoc)
+            res.send(result)
+        })
+
          
     }
     finally {
