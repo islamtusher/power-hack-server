@@ -28,11 +28,20 @@ async function run() {
         })
 
         // load all bill collections data
-        app.get('/bills', async(req, res) => {
+        app.get('/bills', async (req, res) => {
+            const currentPage = parseInt(req.query.currentPage)
             const query = {}
             const cursor =  billsCollection.find(query) 
-            const result = await cursor.toArray()
+            const result = await cursor.skip(currentPage * 10).limit(10).toArray()
             res.send(result)
+        })
+
+        // load all bill collections data
+        app.get('/billsCount', async(req, res) => {
+            const query = {}
+            const cursor =  billsCollection.find(query) 
+            const result = await cursor.count()
+            res.send({result})
         })
 
         // post a new bill informations
@@ -51,7 +60,6 @@ async function run() {
 
         // update the odlder one
         app.patch('/updateBill/:id', async (req, res) => {
-            console.log(req.params);
             const filter = {_id : ObjectId(req.params.id)};
             const updateDoc = {
                 $set: req.body
