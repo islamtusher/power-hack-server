@@ -35,6 +35,13 @@ async function run() {
             res.send(result)
         })
 
+        // post a new bill informations
+        app.post('/addBill', async (req, res) => {
+            const data = req.body
+            const result = await billsCollection.insertOne(data)
+            res.send(result)
+        })
+
          
     }
     finally {
