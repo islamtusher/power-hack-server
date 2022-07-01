@@ -1,7 +1,7 @@
 const express = require('express');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors = require('cors');
-// const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 const port = process.env.PORT || 5000
 require('dotenv').config();
 
@@ -74,8 +74,10 @@ async function run() {
 
         // Post `new user info
         app.post('/api/registration', async (req, res) => {
-            const result = await usersCollection.insertOne( req.body)
-            res.send(result)
+            const email = req.body.email
+            const result = await usersCollection.insertOne(req.body)
+            const accessToken = jwt.sign({ email: email}, process.env.ACCESS_TOKEN, { expiresIn: '10d' });
+            res.send([result, {accessToken : accessToken}])
         })
          
     }
