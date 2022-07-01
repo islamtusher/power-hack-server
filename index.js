@@ -28,38 +28,41 @@ async function run() {
         })
 
         // load all bill collections data
-        app.get('/bills', async (req, res) => {
+        app.get('/api/billing-list', async (req, res) => {
             const currentPage = parseInt(req.query.currentPage)
+            console.log(currentPage);
             const query = {}
             const cursor =  billsCollection.find(query) 
-            const result = await cursor.skip(currentPage * 10).limit(10).toArray()
-            res.send(result)
+            if (currentPage >= 0) {
+                const result = await cursor.skip(currentPage * 10).limit(10).toArray()
+                res.send(result)
+            }
         })
 
-        // load all bill collections data
+        // count all bill collections data
         app.get('/billsCount', async(req, res) => {
             const query = {}
             const cursor =  billsCollection.find(query) 
-            const result = await cursor.count()
+            const result = await billsCollection.estimatedDocumentCount()
             res.send({result})
         })
 
         // post a new bill informations
-        app.post('/addBill', async (req, res) => {
+        app.post('/api/add-billing', async (req, res) => {
             const data = req.body
             const result = await billsCollection.insertOne(data)
             res.send(result)
         })
         
         // DElete a new bill informations
-        app.delete('/deleteBill/:id', async (req, res) => {
+        app.delete('/api/delete-billing/:id', async (req, res) => {
             const query = {_id : ObjectId(req.params.id)}
             const result = await billsCollection.deleteOne(query)
             res.send(result)
         })
 
         // update the odlder one
-        app.patch('/updateBill/:id', async (req, res) => {
+        app.patch('/api/update-billing/:id', async (req, res) => {
             const filter = {_id : ObjectId(req.params.id)};
             const updateDoc = {
                 $set: req.body
