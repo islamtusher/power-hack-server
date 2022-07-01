@@ -79,6 +79,21 @@ async function run() {
             const accessToken = jwt.sign({ email: email}, process.env.ACCESS_TOKEN, { expiresIn: '10d' });
             res.send([result, {accessToken : accessToken}])
         })
+
+        // Post `new user info
+        app.get('/api/login', async (req, res) => {
+            const email = req.query.email
+            const password = req.query.password
+            const query = {email : email, password: password}
+            const user = await usersCollection.findOne(query)
+            if (user) {
+                res.status(200).send({ message: 'Login successfull' })
+                return
+            }
+            else {
+                return res.status(403).send({message: 'Please Provide Valid Email and Passwoard'})
+            } 
+        })
          
     }
     finally {
