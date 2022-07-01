@@ -20,6 +20,7 @@ async function run() {
         await client.connect()
         console.log('Connect With MongoDB');
         const billsCollection = client.db("power-hack").collection("bill-collections");
+        const usersCollection = client.db("power-hack").collection("users");
             
 
         // server home 
@@ -71,6 +72,11 @@ async function run() {
             res.send(result)
         })
 
+        // Post `new user info
+        app.post('/api/registration', async (req, res) => {
+            const result = await usersCollection.insertOne( req.body)
+            res.send(result)
+        })
          
     }
     finally {
